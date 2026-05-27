@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lashya Automation – Smart Sliding Roof Systems</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            deep:      '#0a1a30',
+            accent:    '#2563eb',
+            lightblue: '#dbeafe',
+          },
+          fontFamily: {
+            sans:    ['"DM Sans"', 'system-ui', 'sans-serif'],
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* ── Root Variables ──────────────────────────────── */
+    :root {
+      --deep:      #0a1a30;
+      --accent:    #2563eb;
+      --accent-lt: #dbeafe;
+      --mist:      #f8fafc;
+      --ink:       #1e293b;
+      --sky:       #3b82f6;
+      --sky-light: #93c5fd;
+    }
+
+    /* ── Base ────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      color: var(--ink);
+      background: #fff;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Scroll Progress Bar ─────────────────────────── */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--sky-light));
+      z-index: 9999;
+      transition: width 0.1s linear;
+    }
+
+    /* ── Header ──────────────────────────────────────── */
+    #site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 40;
+      transition: background 0.35s ease, box-shadow 0.35s ease, padding 0.3s ease;
+    }
+    #site-header.scrolled {
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 1px 20px rgba(10,26,48,0.07);
+    }
+    #site-header:not(.scrolled) {
+      background: rgba(255,255,255,0.90);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(203,213,225,0.6);
+    }
+
+    /* Nav link hover underline */
+    .nav-link {
+      position: relative;
+      padding-bottom: 2px;
+      transition: color 0.2s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--accent);
+      transition: width 0.25s cubic-bezier(.4,0,.2,1);
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after { width: 100%; }
+    .nav-link:hover, .nav-link.active { color: var(--deep); }
+
+    /* ── Hero ────────────────────────────────────────── */
+    #home {
+      background: linear-gradient(135deg, #f0f7ff 0%, #f8fafc 50%, #eff6ff 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    #home::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 70% 40%, rgba(37,99,235,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 20% 80%, rgba(59,130,246,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Animated badge */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 14px 4px 6px;
+      border-radius: 999px;
+      border: 1px solid var(--accent-lt);
+      background: white;
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #475569;
+      animation: badge-glow 3s ease infinite;
+    }
+    @keyframes badge-glow {
+      0%,100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+      50%      { box-shadow: 0 0 0 4px rgba(37,99,235,0.08); }
+    }
+    .badge-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse-dot 2s ease infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50%      { transform: scale(1.5); opacity: 0.6; }
+    }
+
+    /* Hero image container */
+    .hero-img-wrap {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow:
+        0 20px 60px rgba(10,26,48,0.12),
+        0 4px 16px rgba(10,26,48,0.06);
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+    .hero-img-wrap:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 28px 72px rgba(10,26,48,0.16),
+        0 6px 20px rgba(10,26,48,0.08);
+    }
+    .hero-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      box-shadow: inset 0 0 0 1px rgba(203,213,225,0.5);
+      pointer-events: none;
+    }
+
+    /* Hero stat items */
+    .stat-item {
+      border-left: 2px solid var(--accent);
+      padding-left: 12px;
+      transition: border-color 0.2s;
+    }
+    .stat-item:hover { border-color: var(--sky); }
+
+    /* ── CTA Buttons ─────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--accent);
+      color: white;
+      border-radius: 999px;
+      padding: 11px 28px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+      text-decoration: none;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(37,99,235,0.4);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      color: var(--deep);
+      border: 1.5px solid #cbd5e1;
+      border-radius: 999px;
+      padding: 10px 28px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* ── Section headings ────────────────────────────── */
+    .section-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      color: var(--accent);
+    }
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.25rem, 3vw, 1.75rem);
+      font-weight: 600;
+      color: var(--deep);
+      line-height: 1.3;
+    }
+
+    /* ── Feature Cards ───────────────────────────────── */
+    .feature-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      border-radius: 18px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      padding: 20px;
+      transition: border-color 0.25s, background 0.25s, transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--sky-light));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    .feature-card:hover {
+      border-color: var(--accent-lt);
+      background: rgba(219,234,254,0.18);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(37,99,235,0.1);
+    }
+    .feature-card:hover::before { transform: scaleX(1); }
+
+    .feature-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--accent-lt);
+      background: white;
+      flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .feature-card:hover .feature-icon {
+      background: var(--accent-lt);
+      border-color: var(--sky);
+    }
+
+    /* ── Use-Case Cards ──────────────────────────────── */
+    .usecase-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      background: white;
+      padding: 14px 16px;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .usecase-card:hover {
+      border-color: var(--accent-lt);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37,99,235,0.08);
+    }
+    .usecase-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--accent-lt);
+      background: rgba(219,234,254,0.4);
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .usecase-card:hover .usecase-icon {
+      background: var(--accent-lt);
+    }
+
+    /* ── Why-Us Cards ────────────────────────────────── */
+    .why-card {
+      border-radius: 18px;
+      border: 1px solid #e2e8f0;
+      background: var(--mist);
+      padding: 24px;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .why-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; right: -40px;
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      transition: transform 0.4s;
+    }
+    .why-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(37,99,235,0.1);
+      border-color: var(--accent-lt);
+    }
+    .why-card:hover::after { transform: scale(1.6); }
+    .why-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.25rem;
+      font-weight: 600;
+      color: var(--sky);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    /* ── Product / CAD Panel ─────────────────────────── */
+    .spec-row {
+      border-left: 2px solid var(--accent-lt);
+      padding-left: 12px;
+      transition: border-color 0.2s;
+    }
+    .spec-row:hover { border-color: var(--accent); }
+
+    .cad-panel {
+      background: #020617;
+      border-radius: 18px;
+      border: 1px solid #1e293b;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cad-panel::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cad-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      border-radius: 10px;
+    }
+    .cad-viewer {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid #1e293b;
+      background: #0f172a;
+      height: 380px;
+      touch-action: none;
+      cursor: grab;
+    }
+    .cad-viewer:active { cursor: grabbing; }
+    .cad-zoom-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      transition: background 0.15s, color 0.15s;
+      user-select: none;
+    }
+    .cad-zoom-btn:hover { background: #2d3f55; color: var(--sky-light); }
+
+    /* ── Gallery ─────────────────────────────────────── */
+    .gallery-card {
+      border-radius: 14px;
+      border: 1px solid var(--accent-lt);
+      overflow: hidden;
+      background: #f8fafc;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .gallery-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(37,99,235,0.12);
+    }
+    .gallery-card .img-wrap {
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+    }
+    .gallery-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s ease;
+    }
+    .gallery-card:hover img { transform: scale(1.05); }
+    .gallery-label {
+      border-top: 1px solid rgba(219,234,254,0.8);
+      padding: 10px 14px;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--deep);
+    }
+
+    /* ── FAQ ─────────────────────────────────────────── */
+    :root {
+  --accent: #2563eb;
+  --accent-soft: rgba(37, 99, 235, 0.08);
+  --border: #e2e8f0;
+  --text-main: #0f172a;
+  --text-sub: #64748b;
+}
+
+/* ITEM */
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ffffff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+/* subtle gradient glow */
+.faq-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, var(--accent-soft), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.faq-item:hover::before {
+  opacity: 1;
+}
+
+/* hover lift */
+.faq-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+/* OPEN STATE */
+.faq-item.open {
+  border-color: var(--accent);
+  box-shadow: 0 10px 35px rgba(37, 99, 235, 0.15);
+}
+
+/* BUTTON */
+.faq-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px 22px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+  z-index: 1;
+}
+
+/* QUESTION TEXT */
+.faq-btn span:first-child {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: 0.2px;
+}
+
+/* ICON */
+.faq-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid #cbd5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--text-sub);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ICON ACTIVE */
+.faq-item.open .faq-icon {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  transform: rotate(45deg) scale(1.1);
+}
+
+/* CONTENT */
+.faq-content {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 22px;
+  font-size: 14px;
+  color: var(--text-sub);
+  line-height: 1.75;
+  transition: 
+    max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.3s ease,
+    opacity 0.25s ease;
+  opacity: 0;
+}
+
+/* OPEN CONTENT */
+.faq-item.open .faq-content {
+  max-height: 320px;
+  padding: 0 22px 20px;
+  opacity: 1;
+}
+
+/* subtle divider line */
+.faq-item.open .faq-content::before {
+  content: "";
+  display: block;
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 12px;
+}
+
+    /* ── Contact card ────────────────────────────────── */
+    .designer-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid #e2e8f0;
+      background: linear-gradient(135deg, #f8fafc 0%, #fff 100%);
+      padding: 28px 32px;
+      box-shadow: 0 8px 30px rgba(15,23,42,0.05);
+    }
+    .designer-card::before {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,0.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── Scroll-reveal (fade-up) ─────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .stagger > * { transition-delay: 0s; }
+
+    /* ── Mobile menu ─────────────────────────────────── */
+    #mobileNav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+
+    background: white;
+
+    transition:
+    max-height 0.35s ease,
+    opacity 0.25s ease;
+
+    z-index: 30;
+    }
+
+#mobileNav.open {
+  max-height: 500px;
+  opacity: 1;
+}
+
+    /* ── Social icon buttons ─────────────────────────── */
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid #e2e8f0;
+      color: #64748b;
+      transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
+    }
+    .social-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-lt);
+      transform: translateY(-1px);
+    }
+
+    /* ── Footer ──────────────────────────────────────── */
+    footer { border-top: 1px solid #e2e8f0; background: white; }
+
+    /* ── Custom Scrollbar ────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <!-- Scroll Progress Bar -->
+  <div id="progress-bar"></div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       STICKY HEADER
+  ════════════════════════════════════════════════════════ -->
+  <header id="site-header">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 lg:px-8">
+
+      <!-- Logo -->
+      <a href="#home" class="flex items-center gap-3 group">
+        <div class="flex h-14 w-14 items-center justify-center rounded-xl border border-slate-200 bg-lightblue/40 transition group-hover:border-accent/40 group-hover:bg-lightblue/70">
+          <img src="images/Lakshya logo.png" class="h-12 object-contain" alt="Lashya Automation Logo" />
+        </div>
+        <div class="leading-tight">
+          <div class="text-sm font-semibold tracking-[0.16em] uppercase text-deep">Lashya Automation</div>
+          <div class="text-[11px] font-medium tracking-[0.18em] uppercase text-slate-500">Smart Sliding Roof Systems</div>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden items-center gap-7 text-[11px] font-medium tracking-[0.16em] uppercase text-slate-600 lg:flex">
+        <a href="#home"      class="nav-link">Home</a>
+        <a href="#features"  class="nav-link">Features</a>
+        <a href="#use-cases" class="nav-link">Use Cases</a>
+        <a href="#product"   class="nav-link">Product</a>
+        <a href="#gallery"   class="nav-link">Gallery</a>
+        <a href="#faq"       class="nav-link">FAQ</a>
+        <a href="#contact"   class="nav-link">Contact</a>
+      </nav>
+
+      <!-- Quick actions (desktop) -->
+      <div class="hidden items-center gap-2 lg:flex">
+        <a href="https://wa.me/919745232642" target="_blank" aria-label="WhatsApp" class="social-btn">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M9.2 8.2c.2-.5.4-.5.7-.5h.3c.1 0 .3 0 .4.3.2.4.6 1.3.6 1.3.1.2.1.4 0 .5l-.3.4c-.1.1-.1.3 0 .4 0 0 .6 1 1.4 1.6.7.5 1.3.7 1.4.8.1 0 .3 0 .4-.1l.5-.6c.1-.1.2-.1.4 0 0 0 1 .5 1.4.7.3.1.3.2.3.3l-.1.5c-.1.4-.3.7-.7.9-.3.2-.7.2-1.2.1-.7-.1-1.7-.5-2.7-1.2-1-.6-2-1.7-2.3-2.1-.3-.4-.7-.9-.9-1.6-.3-.7-.3-1.2-.2-1.6Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="https://www.instagram.com/lakshyaautomation?igsh=MXEyZWxtYzh2aGczYQ==" target="_blank" aria-label="Instagram" class="social-btn">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" aria-hidden="true">
+            <rect x="5" y="5" width="14" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="1.4"/>
+            <circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.4"/>
+            <circle cx="16.1" cy="7.9" r="0.9" fill="currentColor"/>
+          </svg>
+        </a>
+        <a href="https://www.facebook.com/share/1CguBzYy7Y/" target="_blank" aria-label="Facebook" class="social-btn">
+          <svg viewBox="0 0 24 24" class="h-4 w-4" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M13.1 9.1H14V7.4h-1.1c-1.9 0-3.1 1.2-3.1 3.2v1.2H8.9v1.7h.9v3.1h1.9v-3.1h1.4v-1.7h-1.4v-1.1c0-.9.4-1.6 1.5-1.6Z" fill="currentColor"/>
+          </svg>
+        </a>
+        <a href="tel:+919745232642" class="btn-primary ml-1" style="padding: 8px 20px;">
+          Call Now
+        </a>
+      </div>
+
+      <!-- Mobile menu toggle -->
+      <button id="menuToggle"
+              class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:border-accent hover:text-accent lg:hidden"
+              aria-label="Toggle navigation" aria-expanded="false">
+        <svg id="iconMenu" class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 8h14M5 12h14M5 16h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <svg id="iconClose" class="hidden h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Nav -->
+    <div id="mobileNav" class="border-t border-slate-200 bg-white lg:hidden">
+      <div class="mx-auto flex max-w-7xl flex-col px-4 py-4">
+        <nav class="flex flex-col gap-1 text-[11px] font-medium tracking-[0.16em] uppercase text-slate-600">
+          <a href="#home"      class="block rounded-lg px-3 py-2.5 transition hover:bg-lightblue/30 hover:text-deep">Home</a>
+          <a href="#features"  class="block rounded-lg px-3 py-2.5 transition hover:bg-lightblue/30 hover:text-deep">Features</a>
+          <a href="#use-cases" class="block rounded-lg px-3 py-2.5 transition hover:bg-lightblue/30 hover:text-deep">Use Cases</a>
+          <a href="#product"   class="block rounded-lg px-3 py-2.5 transition hover:bg-lightblue/30 hover:text-deep">Product</a>
+          <a href="#gallery"   class="block rounded-lg px-3 py-2.5 transition hover:bg-lightblue/30 hover:text-deep">Gallery</a>
+          <a href="#faq"       class="block rounded-lg px-3 py-2.5 transition hover:bg-lightblue/30 hover:text-deep">FAQ</a>
+          <a href="#contact"   class="block rounded-lg px-3 py-2.5 transition hover:bg-lightblue/30 hover:text-deep">Contact</a>
+        </nav>
+        <div class="mt-4 flex items-center gap-3 border-t border-slate-100 pt-4">
+          <a href="https://wa.me/919745232642" target="_blank" aria-label="WhatsApp" class="social-btn">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M9.2 8.2c.2-.5.4-.5.7-.5h.3c.1 0 .3 0 .4.3.2.4.6 1.3.6 1.3.1.2.1.4 0 .5l-.3.4c-.1.1-.1.3 0 .4 0 0 .6 1 1.4 1.6.7.5 1.3.7 1.4.8.1 0 .3 0 .4-.1l.5-.6c.1-.1.2-.1.4 0 0 0 1 .5 1.4.7.3.1.3.2.3.3l-.1.5c-.1.4-.3.7-.7.9-.3.2-.7.2-1.2.1-.7-.1-1.7-.5-2.7-1.2-1-.6-2-1.7-2.3-2.1-.3-.4-.7-.9-.9-1.6-.3-.7-.3-1.2-.2-1.6Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="https://www.instagram.com/lakshyaautomation?igsh=MXEyZWxtYzh2aGczYQ==" target="_blank" aria-label="Instagram" class="social-btn">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="16.1" cy="7.9" r="0.9" fill="currentColor"/></svg>
+          </a>
+          <a href="https://www.facebook.com/share/1CguBzYy7Y/" target="_blank" aria-label="Facebook" class="social-btn">
+            <svg viewBox="0 0 24 24" class="h-4 w-4" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M13.1 9.1H14V7.4h-1.1c-1.9 0-3.1 1.2-3.1 3.2v1.2H8.9v1.7h.9v3.1h1.9v-3.1h1.4v-1.7h-1.4v-1.1c0-.9.4-1.6 1.5-1.6Z" fill="currentColor"/></svg>
+          </a>
+          <a href="tel:+919745232642" class="btn-primary ml-auto" style="padding: 8px 20px; font-size: 10px;">Call Now</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MAIN
+  ════════════════════════════════════════════════════════ -->
+  <main class="pt-24 lg:pt-28">
+
+    <!-- ── Hero ──────────────────────────────────────────── -->
+    <section id="home">
+      <div class="mx-auto flex max-w-7xl flex-col gap-10 px-4 py-16 lg:flex-row lg:items-center lg:gap-16 lg:px-8 lg:py-24">
+
+        <!-- Left -->
+        <div class="flex-1 space-y-7 fade-up">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            Kerala's Premium Smart Sliding Roof System
+          </div>
+
+          <h1 class="max-w-xl text-3xl font-semibold tracking-tight text-deep sm:text-4xl lg:text-[2.75rem] leading-[1.2]">
+            Upgrade Your Space with
+            <span class="block text-accent" style="font-family:'Playfair Display',serif; font-style:italic;">Intelligent Sliding<br>Roof Technology</span>
+          </h1>
+
+          <p class="max-w-xl text-sm leading-relaxed text-slate-600">
+            Fully automated, weather-adaptive smart roofs engineered for terraces, balconies, courtyards,
+            cafés, resorts and premium villas across Kerala.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <a href="#features" class="btn-primary">Core Features</a>
+            <a href="#product"  class="btn-outline">Product Details</a>
+          </div>
+
+          <div class="grid gap-4 pt-4 sm:grid-cols-3">
+            <div class="stat-item">
+              <div class="text-[11px] font-semibold text-deep">Monsoon-Ready</div>
+              <div class="mt-1 text-[11px] text-slate-500">Rain + wind + sunlight sensors</div>
+            </div>
+            <div class="stat-item">
+              <div class="text-[11px] font-semibold text-deep">Quiet &amp; Precise</div>
+              <div class="mt-1 text-[11px] text-slate-500">&lt;30 dB industrial motors</div>
+            </div>
+            <div class="stat-item">
+              <div class="text-[11px] font-semibold text-deep">Smart Control</div>
+              <div class="mt-1 text-[11px] text-slate-500">App / Remote / Wall switch</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right -->
+        <div class="flex-1 fade-up" style="transition-delay:0.15s;">
+          <div class="hero-img-wrap mx-auto max-w-md aspect-[4/3]">
+            <img src="images/steptodown.com718248.jpg" alt="Smart Sliding Roof" class="h-full w-full object-cover" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Core Features ─────────────────────────────────── -->
+    <section id="features" class="border-t border-slate-100 bg-white">
+      <div class="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-20">
+        <div class="fade-up">
+          <p class="section-label">Core Features</p>
+          <p class="section-title mt-3 max-w-xl">Engineered for reliability, silence and all-weather performance.</p>
+
+          <div class="mt-10 grid gap-5 md:grid-cols-3">
+
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" aria-hidden="true">
+                  <circle cx="12" cy="12" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+                  <path d="M12 4V2.5M12 21.5V20M4 12H2.5M21.5 12H20M6 6L4.9 4.9M19.1 19.1L18 18M18 6l1.1-1.1M4.9 19.1 6 18" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="text-sm font-semibold text-deep">Automatic Climate Response</div>
+              <p class="text-xs leading-relaxed text-slate-600">Roof panels react to real-time rain, wind and sunlight levels to protect and comfort your space.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" aria-hidden="true">
+                  <rect x="8" y="3.5" width="8" height="17" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.4"/>
+                  <circle cx="12" cy="16.3" r="0.9" fill="currentColor"/>
+                  <path d="M9.8 7.5h4.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="text-sm font-semibold text-deep">Mobile App + Remote Control</div>
+              <p class="text-xs leading-relaxed text-slate-600">Seamless control through phone app, handheld remote or wall switch with precise position presets.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" aria-hidden="true">
+                  <path d="M12 4.5s-4.6 5-4.6 8.3A4.6 4.6 0 0 0 12 17.4a4.6 4.6 0 0 0 4.6-4.6C16.6 9.5 12 4.5 12 4.5Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+                  <path d="M6.5 18.5H17.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="text-sm font-semibold text-deep">Waterproof Sealing Technology</div>
+              <p class="text-xs leading-relaxed text-slate-600">Engineered drainage and gasket profiles to handle Kerala's heavy monsoon without leakage.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" aria-hidden="true">
+                  <rect x="5" y="8" width="14" height="8" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/>
+                  <path d="M9 8V6.6a1.4 1.4 0 0 1 1.4-1.4h3.2A1.4 1.4 0 0 1 15 6.6V8M7 16v1.4A1.6 1.6 0 0 0 8.6 19h6.8A1.6 1.6 0 0 0 17 17.4V16" fill="none" stroke="currentColor" stroke-width="1.3"/>
+                </svg>
+              </div>
+              <div class="text-sm font-semibold text-deep">Industrial-Grade Motors</div>
+              <p class="text-xs leading-relaxed text-slate-600">High-torque, low-noise drive units built for 50,000+ cycles with stable linear motion.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" aria-hidden="true">
+                  <circle cx="12" cy="12" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4"/>
+                  <path d="M12 8.3v3.5l2 1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M6 6l1.3 1.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="text-sm font-semibold text-deep">Emergency Manual Override</div>
+              <p class="text-xs leading-relaxed text-slate-600">Integrated manual operation so the roof can be secured even during power interruptions.</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" aria-hidden="true">
+                  <path d="M11 4.5 7.5 12h4l-1 7.5L16.5 11h-4l1-6.5Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="text-sm font-semibold text-deep">Energy-Efficient Operation</div>
+              <p class="text-xs leading-relaxed text-slate-600">Optimised drive system and smart logic reduce power usage with smooth start–stop profiles.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Use Cases ─────────────────────────────────────── -->
+    <section id="use-cases" class="border-t border-slate-100" style="background:#f8fafc;">
+      <div class="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-20">
+        <div class="fade-up">
+          <p class="section-label">Use Case Scenarios</p>
+          <p class="section-title mt-3 max-w-xl">Precision-built sliding roofs for every premium outdoor space.</p>
+
+          <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+            <div class="usecase-card">
+              <div class="usecase-icon">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" aria-hidden="true"><rect x="5" y="8" width="14" height="9" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 10h14" stroke="currentColor" stroke-width="1.2"/></svg>
+              </div>
+              <div class="text-sm font-medium text-deep">Balcony Extension Roof</div>
+            </div>
+
+            <div class="usecase-card">
+              <div class="usecase-icon">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" aria-hidden="true"><rect x="4" y="6" width="16" height="10" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M4 13.2h16" stroke="currentColor" stroke-width="1.2"/></svg>
+              </div>
+              <div class="text-sm font-medium text-deep">Poolside Protection Roof</div>
+            </div>
+
+            <div class="usecase-card">
+              <div class="usecase-icon">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" aria-hidden="true"><rect x="5" y="9" width="14" height="7" rx="1.3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M6 9V7h12v2" stroke="currentColor" stroke-width="1.2"/></svg>
+              </div>
+              <div class="text-sm font-medium text-deep">Outdoor Café Roof</div>
+            </div>
+
+            <div class="usecase-card">
+              <div class="usecase-icon">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" aria-hidden="true"><rect x="4.5" y="9" width="15" height="7.5" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M7 9V7h8v2" stroke="currentColor" stroke-width="1.2"/></svg>
+              </div>
+              <div class="text-sm font-medium text-deep">Car Porch Auto Roof</div>
+            </div>
+
+            <div class="usecase-card">
+              <div class="usecase-icon">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" aria-hidden="true"><rect x="6" y="7" width="12" height="10" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M6 10h12" stroke="currentColor" stroke-width="1.2"/></svg>
+              </div>
+              <div class="text-sm font-medium text-deep">Pergola Upgrade</div>
+            </div>
+
+            <div class="usecase-card">
+              <div class="usecase-icon">
+                <svg viewBox="0 0 24 24" class="h-4 w-4 text-accent" aria-hidden="true"><rect x="5" y="8" width="14" height="8" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 8V6.5h8V8" stroke="currentColor" stroke-width="1.2"/></svg>
+              </div>
+              <div class="text-sm font-medium text-deep">Terrace &amp; Lounge Roofs</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Product Details ───────────────────────────────── -->
+    <section id="product" class="border-t border-slate-100 bg-white">
+      <div class="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-20">
+        <div class="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+
+          <!-- Left: specs -->
+          <div class="fade-up">
+            <p class="section-label">Product Details</p>
+            <p class="section-title mt-3">L-Series Smart Sliding Roof</p>
+            <p class="mt-4 max-w-xl text-sm leading-relaxed text-slate-600">
+              A precision-engineered, modular sliding roof platform designed for premium residential and
+              commercial outdoor spaces across Kerala's coastal and hill regions.
+            </p>
+
+            <dl class="mt-8 grid gap-4 sm:grid-cols-2">
+              <div class="spec-row">
+                <dt class="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-slate-500">Clear span width</dt>
+                <dd class="mt-1 text-sm font-medium text-deep">up to 6.5 m</dd>
+              </div>
+              <div class="spec-row">
+                <dt class="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-slate-500">Travel</dt>
+                <dd class="mt-1 text-sm font-medium text-deep">up to 90%</dd>
+              </div>
+              <div class="spec-row">
+                <dt class="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-slate-500">Roof pitch</dt>
+                <dd class="mt-1 text-sm font-medium text-deep">2°–15°</dd>
+              </div>
+              <div class="spec-row">
+                <dt class="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-slate-500">Motor noise</dt>
+                <dd class="mt-1 text-sm font-medium text-deep">&lt;30 dB</dd>
+              </div>
+              <div class="spec-row">
+                <dt class="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-slate-500">Motor life</dt>
+                <dd class="mt-1 text-sm font-medium text-deep">50,000+ cycles</dd>
+              </div>
+              <div class="spec-row">
+                <dt class="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-slate-500">Sensors</dt>
+                <dd class="mt-1 text-sm font-medium text-deep">Rain + wind + sunlight</dd>
+              </div>
+              <div class="spec-row">
+                <dt class="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-slate-500">Control</dt>
+                <dd class="mt-1 text-sm font-medium text-deep">App / Remote / Wall Switch</dd>
+              </div>
+              <div class="spec-row">
+                <dt class="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-slate-500">Materials</dt>
+                <dd class="mt-1 text-sm font-medium text-deep">Marine-grade aluminium + tempered glass</dd>
+              </div>
+            </dl>
+          </div>
+
+          <!-- Right: CAD viewer -->
+          <div class="fade-up" style="transition-delay:0.1s;">
+            <div class="cad-panel">
+              <!-- Header -->
+              <div class="flex justify-between text-[11px] tracking-[0.18em] text-slate-400 mb-6 relative z-10">
+                <span>SMART SLIDING ROOF</span>
+                <span>TECHNICAL PLAN</span>
+              </div>
+
+              <!-- CAD Viewer -->
+              <div class="relative z-10">
+                <!-- Zoom controls -->
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="text-[10px] tracking-[0.18em] uppercase text-slate-500 mr-auto">PLAN VIEW</span>
+                  <button class="cad-zoom-btn" id="zoomIn" title="Zoom In">+</button>
+                  <button class="cad-zoom-btn" id="zoomOut" title="Zoom Out">−</button>
+                  <button class="cad-zoom-btn" id="zoomReset" title="Reset" style="font-size:11px; letter-spacing:0;">⌂</button>
+                </div>
+
+                <div id="cadView" class="cad-viewer">
+                  <div class="cad-grid-overlay"></div>
+                  <img id="cadImg"
+                       src="images/Lakshya (1).jpg"
+                       class="w-full h-full object-contain select-none"
+                       style="transform-origin:center;"
+                       alt="CAD Plan View"
+                       draggable="false" />
+                </div>
+
+                <p class="mt-2 text-center text-[10px] text-slate-500 tracking-[0.14em]">
+                  Scroll or pinch to zoom · Drag to pan
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Gallery ───────────────────────────────────────── -->
+    <section id="gallery" class="border-t border-slate-100 bg-white">
+      <div class="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-20">
+        <div class="fade-up">
+          <p class="section-label">Gallery</p>
+          <p class="section-title mt-3 max-w-xl">Minimal, bright roofs that disappear into the architecture.</p>
+
+          <div class="mt-10 grid gap-5 md:grid-cols-3">
+
+            <div class="gallery-card fade-up">
+              <div class="img-wrap"><img src="images/steptodown.com236300.jpg" alt="Balcony Roof" /></div>
+              <div class="gallery-label">Balcony Roof</div>
+            </div>
+
+            <div class="gallery-card fade-up" style="transition-delay:0.07s;">
+              <div class="img-wrap"><img src="images/steptodown.com430441.jpg" alt="Terrace Roof" /></div>
+              <div class="gallery-label">Terrace Roof</div>
+            </div>
+
+            <div class="gallery-card fade-up" style="transition-delay:0.14s;">
+              <div class="img-wrap"><img src="images/steptodown.com432757.jpg" alt="Resort Lounge" /></div>
+              <div class="gallery-label">Resort Lounge</div>
+            </div>
+
+            <div class="gallery-card fade-up" style="transition-delay:0.07s;">
+              <div class="img-wrap"><img src="images/steptodown.com536028.jpg" alt="Outdoor Dining" /></div>
+              <div class="gallery-label">Outdoor Dining</div>
+            </div>
+
+            <div class="gallery-card fade-up" style="transition-delay:0.14s;">
+              <div class="img-wrap"><img src="images/steptodown.com834622.jpg" alt="Car Porch Roof" /></div>
+              <div class="gallery-label">Car Porch Roof</div>
+            </div>
+
+            <div class="gallery-card fade-up" style="transition-delay:0.21s;">
+              <div class="img-wrap"><img src="images/steptodown.com954565.jpg" alt="Penthouse Roof" /></div>
+              <div class="gallery-label">Penthouse Roof</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Why Choose Us ─────────────────────────────────── -->
+    <section id="why-us" class="border-t border-slate-100" style="background:#f8fafc;">
+      <div class="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-20">
+        <div class="fade-up">
+          <p class="section-label">Why Choose Us</p>
+          <p class="section-title mt-3 max-w-xl">Built specifically for Kerala's coastal climate and outdoor lifestyles.</p>
+
+          <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3 stagger">
+
+            <div class="why-card fade-up">
+              <div class="why-num">01</div>
+              <div class="text-sm font-semibold text-deep mb-2">Zero Leakage Guarantee</div>
+              <p class="text-sm leading-relaxed text-slate-500">Advanced gasket design and engineered drainage prevent water ingress even during extreme monsoon bursts.</p>
+            </div>
+
+            <div class="why-card fade-up" style="transition-delay:0.07s;">
+              <div class="why-num">02</div>
+              <div class="text-sm font-semibold text-deep mb-2">Industrial-Rated Motors</div>
+              <p class="text-sm leading-relaxed text-slate-500">Oversized motors rated for industrial duty — not domestic. More torque, longer life, quieter operation.</p>
+            </div>
+
+            <div class="why-card fade-up" style="transition-delay:0.14s;">
+              <div class="why-num">03</div>
+              <div class="text-sm font-semibold text-deep mb-2">Outdoor-Safe Wiring</div>
+              <p class="text-sm leading-relaxed text-slate-500">Routed, shielded wiring with full protection against humidity, salinity and long-term UV exposure.</p>
+            </div>
+
+            <div class="why-card fade-up" style="transition-delay:0.07s;">
+              <div class="why-num">04</div>
+              <div class="text-sm font-semibold text-deep mb-2">Fast, Clean Installation</div>
+              <p class="text-sm leading-relaxed text-slate-500">Modular fabrication and pre-engineered brackets keep on-site work sharp, efficient and minimally disruptive.</p>
+            </div>
+
+            <div class="why-card fade-up" style="transition-delay:0.14s;">
+              <div class="why-num">05</div>
+              <div class="text-sm font-semibold text-deep mb-2">Monsoon-Specific Design</div>
+              <p class="text-sm leading-relaxed text-slate-500">Designed ground-up for Kerala's high rainfall, coastal winds and salt-laden humid air — not generic imports.</p>
+            </div>
+
+            <div class="why-card fade-up" style="transition-delay:0.21s;">
+              <div class="why-num">06</div>
+              <div class="text-sm font-semibold text-deep mb-2">Smart Weather Automation</div>
+              <p class="text-sm leading-relaxed text-slate-500">Sensors react to changing conditions automatically — protecting furniture and guests before you think to act.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+      <!-- ── FAQ ───────────────────────────────────────────── -->
+    <section id="faq" class="border-t border-slate-100 bg-white">
+  <div class="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-20">
+
+    <!-- HEADER -->
+    <div class="max-w-xl mb-10">
+      <h2 class="text-xs font-semibold uppercase tracking-[0.26em] text-accent">FAQ</h2>
+      <p class="mt-3 text-lg font-semibold tracking-tight text-slate-800">
+        Straight answers. No vague promises.
+      </p>
+      <p class="mt-2 text-sm text-slate-500">
+        Everything you actually need to know before installing a smart roof system.
+      </p>
+    </div>
+
+    <!-- FAQ LIST -->
+    <div class="faq-wrapper space-y-4">
+
+  <!-- ITEM -->
+  <div class="faq-item">
+    <button class="faq-btn">
+      <span class="faq-question">
+        What happens during a power failure?
+      </span>
+
+      <span class="faq-icon">+</span>
+    </button>
+
+    <div class="faq-content">
+      <p>
+        Manual override allows full operation during power cuts.
+        Optional backup power systems can be installed if you want zero interruption.
+      </p>
+    </div>
+  </div>
+
+  <!-- ITEM -->
+  <div class="faq-item">
+    <button class="faq-btn">
+      <span class="faq-question">
+        Will it leak during heavy rain?
+      </span>
+
+      <span class="faq-icon">+</span>
+    </button>
+
+    <div class="faq-content">
+      <p>
+        No. Multi-layer sealing and drainage channels are designed specifically for Kerala monsoon.
+        Water is redirected, not trapped.
+      </p>
+    </div>
+  </div>
+
+  <!-- ITEM -->
+  <div class="faq-item">
+    <button class="faq-btn">
+      <span class="faq-question">
+        Can it handle strong winds?
+      </span>
+
+      <span class="faq-icon">+</span>
+    </button>
+
+    <div class="faq-content">
+      <p>
+        Yes. Each system is engineered based on site conditions with proper anchoring and load calculations.
+        Not a generic installation.
+      </p>
+    </div>
+  </div>
+
+  <!-- ITEM -->
+  <div class="faq-item">
+    <button class="faq-btn">
+      <span class="faq-question">
+        How long does the motor last?
+      </span>
+
+      <span class="faq-icon">+</span>
+    </button>
+
+    <div class="faq-content">
+      <p>
+        Rated for 50,000+ cycles. Soft-start reduces wear, so real-world lifespan is significantly longer.
+      </p>
+    </div>
+  </div>
+
+  <!-- ITEM -->
+  <div class="faq-item">
+    <button class="faq-btn">
+      <span class="faq-question">
+        What maintenance is required?
+      </span>
+
+      <span class="faq-icon">+</span>
+    </button>
+
+    <div class="faq-content">
+      <p>
+        Basic cleaning of tracks and glass. Optional yearly service available if you prefer zero hassle.
+      </p>
+    </div>
+  </div>
+
+</div>
+    <!-- ── Contact ───────────────────────────────────────── -->
+    <section id="contact" class="border-t border-slate-100" style="background:#f8fafc;">
+      <div class="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-20">
+        <div class="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-start">
+
+          <!-- Left: contact info -->
+          <div class="space-y-8 fade-up">
+            <div class="flex items-center gap-3">
+              <div class="flex h-20 w-20 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm">
+                <img src="images/Lakshya logo.png" alt="Lashya Automation Logo" class="h-16 w-16 object-contain" />
+              </div>
+              <div>
+                <div class="text-sm font-semibold tracking-[0.16em] uppercase text-deep">Lashya Automation</div>
+                <div class="text-[11px] font-medium tracking-[0.18em] uppercase text-slate-500">Smart Sliding Roof Systems</div>
+              </div>
+            </div>
+
+            <div>
+              <p class="section-title" style="font-size:1.25rem;">Share your project and get a precise quote.</p>
+              <p class="mt-3 max-w-xl text-sm leading-relaxed text-slate-600">
+                We design and install smart sliding roofs across Kerala – from compact balconies to large resort
+                courtyards. Send a brief of your site, and we will advise the best configuration.
+              </p>
+            </div>
+
+            <div class="grid gap-5">
+              <div>
+            <div class="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-1">
+                 Email
+            </div>
+
+            <a href="mailto:lakshyaautomation733@gmail.com"
+             class="text-sm text-slate-900 underline-offset-4 hover:underline hover:text-blue-600 transition-colors">
+                  lakshyaautomation733@gmail.com
+            </a>
+            </div>
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <div class="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-slate-500 mb-1">Phone</div>
+                  <a href="tel:+919745232642" class="text-sm text-deep underline-offset-4 hover:underline hover:text-accent transition-colors">+91 97452 32642</a>
+                </div>
+                <div>
+                  <div class="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-slate-500 mb-1">WhatsApp</div>
+                  <a href="https://wa.me/919745232642" target="_blank" class="text-sm text-deep underline-offset-4 hover:underline hover:text-accent transition-colors">Chat on WhatsApp</a>
+                </div>
+              </div>
+              <div>
+                <div class="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-slate-500 mb-1">Location</div>
+                <p class="text-sm text-deep">Kerala, India</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: designer card -->
+          <div class="" style="transition-delay:0.1s;">
+            <div class="relative">
+              <div class="text-accent">
+            </div>
+          </div>
+
+        </div>
+      </div>
+  
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+      <div class="space-y-1">
+        <div class="text-[11px] font-medium uppercase tracking-[0.18em] text-slate-600">
+          <span id="year"></span> © Lashya Automation
+        </div>
+        <div class="text-[11px] tracking-[0.16em] uppercase text-slate-400">Smart Sliding Roof Systems for Kerala</div>
+        
+        <div class="text-[11px] text-slate-400">
+          Designed by <a href="https://wa.me/917306583523" target="_blank" class="text-accent hover:underline">Geo Padamadan</a>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <a href="https://www.instagram.com/lakshyaautomation?igsh=MXEyZWxtYzh2aGczYQ==" target="_blank" class="social-btn" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="16.1" cy="7.9" r="0.9" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.facebook.com/share/1CguBzYy7Y/" target="_blank" class="social-btn" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M13.1 9.1H14V7.4h-1.1c-1.9 0-3.1 1.2-3.1 3.2v1.2H8.9v1.7h.9v3.1h1.9v-3.1h1.4v-1.7h-1.4v-1.1c0-.9.4-1.6 1.5-1.6Z" fill="currentColor"/></svg>
+        </a>
+        <a href="https://wa.me/919745232642" target="_blank" class="social-btn" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M9.2 8.2c.2-.5.4-.5.7-.5h.3c.1 0 .3 0 .4.3.2.4.6 1.3.6 1.3.1.2.1.4 0 .5l-.3.4c-.1.1-.1.3 0 .4 0 0 .6 1 1.4 1.6.7.5 1.3.7 1.4.8.1 0 .3 0 .4-.1l.5-.6c.1-.1.2-.1.4 0 0 0 1 .5 1.4.7.3.1.3.2.3.3l-.1.5c-.1.4-.3.7-.7.9-.3.2-.7.2-1.2.1-.7-.1-1.7-.5-2.7-1.2-1-.6-2-1.7-2.3-2.1-.3-.4-.7-.9-.9-1.6-.3-.7-.3-1.2-.2-1.6Z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="tel:+919745232642" class="btn-primary ml-1" style="padding: 7px 18px; font-size: 10px;">Call</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════════════════
+       JAVASCRIPT
+  ════════════════════════════════════════════════════════ -->
+  <script>
+    // ── Year ────────────────────────────────────────────────
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ── Scroll Progress Bar ──────────────────────────────────
+    const progressBar = document.getElementById('progress-bar');
+    function updateProgress() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = docHeight > 0 ? (scrollTop / docHeight * 100) + '%' : '0%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+
+    // ── Header scroll state ──────────────────────────────────
+    const header = document.getElementById('site-header');
+    function updateHeader() {
+      header.classList.toggle('scrolled', window.scrollY > 30);
+    }
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    updateHeader();
+
+    // ── Active nav link on scroll ────────────────────────────
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            navLinks.forEach(link => {
+              link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+            });
+          }
+        });
+      },
+      { rootMargin: '-30% 0px -60% 0px' }
+    );
+    sections.forEach(s => observer.observe(s));
+
+    // ── Mobile menu toggle ───────────────────────────────────
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileNav  = document.getElementById('mobileNav');
+    const iconMenu   = document.getElementById('iconMenu');
+    const iconClose  = document.getElementById('iconClose');
+    let menuOpen = false;
+
+    function toggleMenu(force) {
+      menuOpen = force !== undefined ? force : !menuOpen;
+      mobileNav.classList.toggle('open', menuOpen);
+      iconMenu.classList.toggle('hidden', menuOpen);
+      iconClose.classList.toggle('hidden', !menuOpen);
+      menuToggle.setAttribute('aria-expanded', String(menuOpen));
+    }
+
+    menuToggle.addEventListener('click', () => toggleMenu());
+
+    // Close on nav link click (mobile)
+    mobileNav.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', () => toggleMenu(false));
+    });
+
+    // ── Scroll-reveal (Intersection Observer) ────────────────
+    const fadeEls = document.querySelectorAll('.fade-up');
+    const fadeObs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            fadeObs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    fadeEls.forEach(el => fadeObs.observe(el));
+
+    // ── FAQ accordion ────────────────────────────────────────
+    const items = document.querySelectorAll('.faq-item');
+
+items.forEach(item => {
+  const btn = item.querySelector('.faq-btn');
+  const content = item.querySelector('.faq-content');
+
+  btn.addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+
+    // CLOSE ALL
+    items.forEach(i => {
+      i.classList.remove('open');
+      const c = i.querySelector('.faq-content');
+      c.style.maxHeight = null;
+    });
+
+    // OPEN CLICKED
+    if (!isOpen) {
+      item.classList.add('open');
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+});
+    // ── CAD Viewer: zoom + pan ───────────────────────────────
+    (function () {
+      const view  = document.getElementById('cadView');
+      const img   = document.getElementById('cadImg');
+      if (!view || !img) return;
+
+      let scale = 1, tx = 0, ty = 0;
+      let dragging = false, startX = 0, startY = 0, lastTx = 0, lastTy = 0;
+
+      const MIN_SCALE = 0.5, MAX_SCALE = 4;
+
+      function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+      function applyTransform(animate) {
+        if (animate) {
+          img.style.transition = 'transform 0.2s ease';
+          setTimeout(() => img.style.transition = '', 250);
+        } else {
+          img.style.transition = '';
+        }
+        img.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+      }
+
+      function setZoom(newScale, cx, cy) {
+        const rect = view.getBoundingClientRect();
+        const ox = (cx ?? rect.width  / 2) - rect.left;
+        const oy = (cy ?? rect.height / 2) - rect.top;
+        const factor = newScale / scale;
+        tx = ox + (tx - ox) * factor;
+        ty = oy + (ty - oy) * factor;
+        scale = newScale;
+        applyTransform(true);
+      }
+
+      // Zoom buttons
+      document.getElementById('zoomIn' ).addEventListener('click', () => setZoom(clamp(scale * 1.3, MIN_SCALE, MAX_SCALE)));
+      document.getElementById('zoomOut').addEventListener('click', () => setZoom(clamp(scale / 1.3, MIN_SCALE, MAX_SCALE)));
+      document.getElementById('zoomReset').addEventListener('click', () => {
+        scale = 1; tx = 0; ty = 0;
+        applyTransform(true);
+      });
+
+      // Mouse wheel zoom
+      view.addEventListener('wheel', e => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? 0.85 : 1.18;
+        const newScale = clamp(scale * delta, MIN_SCALE, MAX_SCALE);
+        const rect = view.getBoundingClientRect();
+        setZoom(newScale, e.clientX - rect.left, e.clientY - rect.top);
+      }, { passive: false });
+
+      // Mouse drag
+      view.addEventListener('mousedown', e => {
+        if (e.button !== 0) return;
+        dragging = true;
+        startX = e.clientX; startY = e.clientY;
+        lastTx = tx; lastTy = ty;
+        view.style.cursor = 'grabbing';
+      });
+      window.addEventListener('mousemove', e => {
+        if (!dragging) return;
+        tx = lastTx + (e.clientX - startX);
+        ty = lastTy + (e.clientY - startY);
+        applyTransform();
+      });
+      window.addEventListener('mouseup', () => {
+        dragging = false;
+        view.style.cursor = 'grab';
+      });
+
+      // Touch pinch/pan
+      let lastTouches = null;
+      view.addEventListener('touchstart', e => {
+        lastTouches = Array.from(e.touches);
+        lastTx = tx; lastTy = ty;
+      }, { passive: true });
+
+      view.addEventListener('touchmove', e => {
+        const touches = Array.from(e.touches);
+        if (touches.length === 1 && lastTouches?.length === 1) {
+          const dx = touches[0].clientX - lastTouches[0].clientX;
+          const dy = touches[0].clientY - lastTouches[0].clientY;
+          tx += dx; ty += dy;
+          applyTransform();
+        } else if (touches.length === 2 && lastTouches?.length === 2) {
+          const d0 = Math.hypot(lastTouches[0].clientX - lastTouches[1].clientX, lastTouches[0].clientY - lastTouches[1].clientY);
+          const d1 = Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY);
+          const midX = (touches[0].clientX + touches[1].clientX) / 2;
+          const midY = (touches[0].clientY + touches[1].clientY) / 2;
+          const rect = view.getBoundingClientRect();
+          const newScale = clamp(scale * d1 / d0, MIN_SCALE, MAX_SCALE);
+          setZoom(newScale, midX - rect.left, midY - rect.top);
+        }
+        lastTouches = touches;
+      }, { passive: true });
+
+      view.addEventListener('touchend', () => { lastTouches = null; });
+    })();
+  </script>
+
+</body>
+</html>
